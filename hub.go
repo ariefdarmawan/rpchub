@@ -20,7 +20,7 @@ func NewHub() *Hub {
 	return r
 }
 
-func (r *Hub) setLogger(l *toolkit.LogEngine) *Hub {
+func SetHubLog(r *Hub, l *toolkit.LogEngine) *Hub {
 	r.log = l
 	return r
 }
@@ -115,7 +115,7 @@ func registerObjToHub(hub *Hub, obj interface{}) error {
 		}
 
 		hub.fns[fnName] = fn
-		HubLog(hub).Infof("adding to Hub: %s", fnName)
+		HubLog(hub).Infof("adding to RPC Hub: %s", fnName)
 	}
 
 	return nil
