@@ -67,7 +67,10 @@ func (r *Hub) Call(request Request, response *Response) error {
 		o := outs[0]
 		t := o.Type()
 		k := t.Kind()
-		if k == reflect.String {
+		//fmt.Println("return type:", t.String())
+		if t.String() == "[]uint8" {
+			response.Data = o.Interface().([]byte)
+		} else if k == reflect.String {
 			response.Data = []byte(o.String())
 		} else if k == reflect.Int || k == reflect.Int8 ||
 			k == reflect.Int16 || k == reflect.Int32 || k == reflect.Int64 {
