@@ -7,12 +7,12 @@ import (
 	"github.com/ariefdarmawan/rpchub"
 )
 
-type client struct {
+type Client struct {
 	dialer *rpc.Client
 }
 
-func NewClient(addr string) (*client, error) {
-	c := new(client)
+func NewClient(addr string) (*Client, error) {
+	c := new(Client)
 
 	d, err := rpc.Dial("tcp", addr)
 	if err != nil {
@@ -23,8 +23,11 @@ func NewClient(addr string) (*client, error) {
 	return c, nil
 }
 
-func (c *client) Call(name string, parms ...interface{}) *rpchub.Response {
+func (c *Client) Call(name string, parms ...interface{}) *rpchub.Response {
 	res := new(rpchub.Response)
+	if c == nil {
+		return rpchub.NewResponseWithErr("client is not yet initialized")
+	}
 	if c.dialer == nil {
 		return rpchub.NewResponseWithErr("client is not connected")
 	}
@@ -36,7 +39,7 @@ func (c *client) Call(name string, parms ...interface{}) *rpchub.Response {
 	return res
 }
 
-func (c *client) Close() {
+func (c *Client) Close() {
 	if c.dialer != nil {
 		c.dialer.Close()
 	}
