@@ -9,7 +9,7 @@ import (
 	"github.com/eaciit/toolkit"
 )
 
-type server struct {
+type Server struct {
 	hub      *rpchub.Hub
 	log      *toolkit.LogEngine
 	listener net.Listener
@@ -17,25 +17,25 @@ type server struct {
 	chStop chan bool
 }
 
-func NewServer() *server {
-	s := new(server)
+func NewServer() *Server {
+	s := new(Server)
 	s.hub = rpchub.NewHub()
 	return s
 }
 
-func (s *server) SetLog(l *toolkit.LogEngine) *server {
+func (s *Server) SetLog(l *toolkit.LogEngine) *Server {
 	s.log = l
 	return s
 }
 
-func (s *server) Log() *toolkit.LogEngine {
+func (s *Server) Log() *toolkit.LogEngine {
 	if s.log == nil {
 		s.log = toolkit.NewLogEngine(true, false, "", "", "")
 	}
 	return s.log
 }
 
-func (s *server) Register(objs ...interface{}) *server {
+func (s *Server) Register(objs ...interface{}) *Server {
 	if s.hub == nil {
 		return s
 	}
@@ -47,7 +47,7 @@ func (s *server) Register(objs ...interface{}) *server {
 	return s
 }
 
-func (s *server) Start(addr string) error {
+func (s *Server) Start(addr string) error {
 	l, err := net.Listen("tcp", addr)
 	if err != nil {
 		err = fmt.Errorf("unable to listen to address %s. %s", addr, err.Error())
@@ -70,7 +70,7 @@ func (s *server) Start(addr string) error {
 	return nil
 }
 
-func (s *server) RequestToStop() {
+func (s *Server) RequestToStop() {
 	if s.chStop == nil {
 		s.Stop()
 	}
@@ -78,7 +78,7 @@ func (s *server) RequestToStop() {
 	s.chStop <- true
 }
 
-func (s *server) WaitForStop() {
+func (s *Server) WaitForStop() {
 	if s.chStop == nil {
 		return
 	}
@@ -86,7 +86,7 @@ func (s *server) WaitForStop() {
 	<-s.chStop
 }
 
-func (s *server) Stop() {
+func (s *Server) Stop() {
 	if s.log != nil {
 		s.log.Close()
 	}
